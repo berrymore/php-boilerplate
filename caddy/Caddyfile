@@ -1,3 +1,0 @@
-project.local {
-    reverse_proxy boilerplate-core-rr:8080
-}

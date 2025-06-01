@@ -1,0 +1,22 @@
+{
+  "name": "boilerplate/boilerplate-welcome",
+  "description": "Welcome",
+  "type": "project",
+  "license": "proprietary",
+  "autoload": {
+    "psr-4": {
+      "App\\Welcome\\": "src/"
+    }
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../boilerplate-kernel"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "php": "^8.4",
+    "boilerplate/boilerplate-kernel": "dev-main"
+  }
+}

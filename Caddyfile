@@ -1,0 +1,3 @@
+project.local {
+    reverse_proxy boilerplate-api:8080
+}

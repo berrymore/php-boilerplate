@@ -1,0 +1,44 @@
+{
+  "name": "boilerplate/monolith",
+  "description": "Boilerplate",
+  "type": "project",
+  "license": "proprietary",
+  "repositories": [
+    {
+      "type": "path",
+      "url": "boilerplate-kernel"
+    },
+    {
+      "type": "path",
+      "url": "boilerplate-welcome"
+    },
+    {
+      "type": "path",
+      "url": "boilerplate-api"
+    }
+  ],
+  "x-modules": [
+    "App\\Kernel\\Module",
+    "App\\Welcome\\Module",
+    "App\\Api\\Module"
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "php": "^8.4",
+    "boilerplate/boilerplate-kernel": "dev-main",
+    "boilerplate/boilerplate-welcome": "dev-main",
+    "boilerplate/boilerplate-api": "dev-main"
+  },
+  "require-dev": {
+    "phpstan/phpstan": "^2.0",
+    "squizlabs/php_codesniffer": "^3.11",
+    "symfony/var-dumper": "^7.2",
+    "roave/security-advisories": "dev-latest"
+  },
+  "scripts": {
+    "cs": [
+      "phpcs --standard=PSR12 src",
+      "phpstan analyse src --level=5"
+    ]
+  }
+}
