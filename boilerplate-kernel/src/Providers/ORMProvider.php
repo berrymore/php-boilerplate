@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Kernel\Providers;
 
+use App\Kernel\Lib\ORM\ORMConfigurator;
 use App\Kernel\Lib\ORM\ORMRegistry;
 use App\Kernel\Lib\ORM\ORMRegistryImpl;
-use App\Kernel\ProviderInterface;
 use Carbon\Doctrine\CarbonImmutableType;
 use Carbon\Doctrine\CarbonType;
+use Component\Kernel\ProviderInterface;
 use DI\ContainerBuilder;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManager;
@@ -16,9 +17,9 @@ use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use Doctrine\ORM\ORMSetup;
 use Gedmo\Timestampable\TimestampableListener;
 use Noodlehaus\ConfigInterface;
-use Psr\Container\ContainerInterface;
-use Ramsey\Uuid\Doctrine\UuidBinaryType;
 use Ramsey\Uuid\Doctrine\UuidType;
+
+use function DI\create;
 
 final readonly class ORMProvider implements ProviderInterface
 {
@@ -29,12 +30,12 @@ final readonly class ORMProvider implements ProviderInterface
     {
         $builder->addDefinitions(
             [
-                ORMRegistry::class => static function (ContainerInterface $container) {
+                ORMConfigurator::class => create(ORMConfigurator::class),
+                ORMRegistry::class     => static function (ConfigInterface $config, ORMConfigurator $configurator) {
                     $registry = new ORMRegistryImpl();
-                    $config   = $container->get(ConfigInterface::class);
 
                     $configuration = ORMSetup::createXMLMetadataConfiguration(
-                        [__DIR__ . '/../../../boilerplate-welcome/resources/entities'],
+                        $configurator->getPaths(),
                         isXsdValidationEnabled: false
                     );
 

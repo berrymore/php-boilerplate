@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Api;
 
 use App\Api\Providers\HttpProvider;
-use App\Kernel\ModuleInterface;
+use Component\Kernel\ModuleInterface;
 
 final readonly class Module implements ModuleInterface
 {

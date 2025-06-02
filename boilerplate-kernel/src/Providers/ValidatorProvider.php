@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Kernel\Providers;
 
-use App\Kernel\ProviderInterface;
+use Component\Kernel\ProviderInterface;
 use DI\ContainerBuilder;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;

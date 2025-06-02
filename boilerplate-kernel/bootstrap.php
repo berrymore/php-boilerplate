@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Component\Kernel\BootableInterface;
 use DI\ContainerBuilder;
 use Dotenv\Dotenv;
 use Dotenv\Repository\Adapter\EnvConstAdapter;
@@ -27,17 +28,28 @@ function boot(): ContainerInterface
     // build container
     $containerBuilder = new ContainerBuilder();
     $composer         = json_decode(file_get_contents(__DIR__ . '/../composer.json'), true);
+    $modules          = [];
 
-    if (isset($composer['x-modules'])) {
-        foreach ($composer['x-modules'] as $moduleClass) {
-            /** @var \App\Kernel\ModuleInterface $module */
-            $module = new $moduleClass();
+    // register providers
+    foreach ($composer['x-modules'] ?? [] as $moduleClass) {
+        /** @var \Component\Kernel\ModuleInterface $module */
+        $module = new $moduleClass();
 
-            foreach ($module->getProviders() as $provider) {
-                new $provider()->register($containerBuilder);
-            }
+        foreach ($module->getProviders() as $provider) {
+            new $provider()->register($containerBuilder);
+        }
+
+        $modules[] = $module;
+    }
+
+    $container = $containerBuilder->build();
+
+    // boot modules
+    foreach ($modules as $module) {
+        if ($module instanceof BootableInterface) {
+            $module->boot($container);
         }
     }
 
-    return $containerBuilder->build();
+    return $container;
 }

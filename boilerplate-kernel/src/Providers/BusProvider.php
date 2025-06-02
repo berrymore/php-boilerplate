@@ -9,10 +9,10 @@ use App\Kernel\Lib\Bus\Middleware\WrapInTransactionMiddleware;
 use App\Kernel\Lib\CommandBus\CommandBus;
 use App\Kernel\Lib\CommandBus\CommandBusImpl;
 use App\Kernel\Lib\ORM\ORMRegistry;
-use App\Kernel\ProviderInterface;
 use Component\Bus\Bus;
 use Component\Bus\BusImpl;
 use Component\Bus\Middleware\BusRouterMiddleware;
+use Component\Kernel\ProviderInterface;
 use DI\ContainerBuilder;
 use Psr\Container\ContainerInterface;
 

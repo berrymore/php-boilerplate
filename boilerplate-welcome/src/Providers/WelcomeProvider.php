@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Welcome\Providers;
 
-use App\Kernel\ProviderInterface;
 use App\Welcome\Adapter\Repositories\QuoteRepositoryImpl;
 use App\Welcome\Application\Repositories\QuoteRepository;
+use Component\Kernel\ProviderInterface;
 use DI\ContainerBuilder;
 
 use function DI\autowire;
