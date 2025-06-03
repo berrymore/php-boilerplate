@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Kernel\Lib\CommandBus;
 
-use Component\Bus\Bus;
-use Component\Bus\Stamps\BusNameStamp;
+use Carina\Bus\Bus;
+use Carina\Bus\Stamps\BusNameStamp;
 
 final readonly class CommandBusImpl implements CommandBus
 {

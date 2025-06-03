@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Kernel\Lib\Bus\Middleware;
 
-use Component\Bus\EnvelopeInterface;
-use Component\Bus\Middleware\MiddlewareInterface;
-use Component\Bus\Middleware\StackInterface;
+use Carina\Bus\EnvelopeInterface;
+use Carina\Bus\Middleware\MiddlewareInterface;
+use Carina\Bus\Middleware\StackInterface;
 use Psr\Container\ContainerInterface;
 
 final readonly class CommandHandlerMiddleware implements MiddlewareInterface

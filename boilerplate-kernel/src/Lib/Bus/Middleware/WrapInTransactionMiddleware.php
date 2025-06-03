@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Kernel\Lib\Bus\Middleware;
 
 use App\Kernel\Lib\ORM\ORMRegistry;
-use Component\Bus\EnvelopeInterface;
-use Component\Bus\Middleware\MiddlewareInterface;
-use Component\Bus\Middleware\StackInterface;
+use Carina\Bus\EnvelopeInterface;
+use Carina\Bus\Middleware\MiddlewareInterface;
+use Carina\Bus\Middleware\StackInterface;
 use Throwable;
 
 final readonly class WrapInTransactionMiddleware implements MiddlewareInterface

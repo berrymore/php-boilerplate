@@ -2,8 +2,8 @@
 
 namespace App\Api\Http\Middleware;
 
-use Component\Http\MiddlewareInterface;
-use Component\Http\RequestHandlerInterface;
+use Carina\Http\MiddlewareInterface;
+use Carina\Http\RequestHandlerInterface;
 use Symfony\Component\HttpFoundation\Exception\JsonException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

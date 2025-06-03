@@ -11,6 +11,8 @@ rr:
 		--net $(NETWORK_NAME) \
 		-w /app/boilerplate-api \
 		-v $(PROJECT_DIR):/app \
+		-e "PHP_IDE_CONFIG=serverName=localhost" \
+		-e "XDEBUG_CONFIG=client_host=host.docker.internal" \
 		berrymore/php:8.4-dev
 
 caddy:

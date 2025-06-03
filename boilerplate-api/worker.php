@@ -33,6 +33,6 @@ while (true) {
     try {
         $psr7->respond($psrFactory->createResponse($kernel->handle($httpFactory->createRequest($request))));
     } catch (Throwable $e) {
-        $psr7->respond(new Response(500, [], $e->getMessage()));
+        $psr7->respond(new Response(500, [], $e->getMessage() . $e->getTraceAsString()));
     }
 }

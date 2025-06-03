@@ -1,0 +1,23 @@
+{
+  "name": "berrymore/carina",
+  "description": "Carina Framework",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Carina\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Sergei Aleinik",
+      "email": "kerbi.jam@yandex.ru"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "symfony/http-foundation": "^7.3",
+    "psr/container": "^2.0",
+    "symfony/serializer": "^7.3"
+  }
+}

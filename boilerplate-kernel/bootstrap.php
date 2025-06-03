@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-use Component\Kernel\BootableInterface;
+use Carina\Bootloader\BootContext;
+use Carina\Bootloader\Attribute\OnBoot;
+use Carina\Bootloader\Attribute\BeforeBoot;
 use DI\ContainerBuilder;
 use Dotenv\Dotenv;
 use Dotenv\Repository\Adapter\EnvConstAdapter;
@@ -28,26 +30,41 @@ function boot(): ContainerInterface
     // build container
     $containerBuilder = new ContainerBuilder();
     $composer         = json_decode(file_get_contents(__DIR__ . '/../composer.json'), true);
-    $modules          = [];
 
-    // register providers
-    foreach ($composer['x-modules'] ?? [] as $moduleClass) {
-        /** @var \Component\Kernel\ModuleInterface $module */
-        $module = new $moduleClass();
+    $context = new BootContext(
+        array_map(fn(string $file) => __DIR__ . '/../' . $file, $composer['extra']['bootload'] ?? []),
+        [BeforeBoot::class, OnBoot::class]
+    );
 
-        foreach ($module->getProviders() as $provider) {
-            new $provider()->register($containerBuilder);
+    $context->refresh();
+
+    foreach ($context->getAttributedBy(BeforeBoot::class) as $refl) {
+        if ($refl instanceof ReflectionClass) {
+            $instance = $refl->newInstanceWithoutConstructor();
+
+            if (is_callable($instance)) {
+                $instance($containerBuilder);
+            }
+        } elseif ($refl instanceof ReflectionMethod) {
+            $instance = $refl->getDeclaringClass()->newInstanceWithoutConstructor();
+
+            $refl->invoke($instance, $containerBuilder);
         }
-
-        $modules[] = $module;
     }
 
     $container = $containerBuilder->build();
 
-    // boot modules
-    foreach ($modules as $module) {
-        if ($module instanceof BootableInterface) {
-            $module->boot($container);
+    foreach ($context->getAttributedBy(OnBoot::class) as $refl) {
+        if ($refl instanceof ReflectionClass) {
+            $instance = $refl->newInstanceWithoutConstructor();
+
+            if (is_callable($instance)) {
+                $instance($container);
+            }
+        } elseif ($refl instanceof ReflectionMethod) {
+            $instance = $refl->getDeclaringClass()->newInstanceWithoutConstructor();
+
+            $container->call([$instance, $refl->getName()]);
         }
     }
 

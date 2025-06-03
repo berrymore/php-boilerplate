@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Api\Http\Controller\Welcome;
 
 use App\Welcome\Application\Repositories\QuoteRepository;
-use Component\Http\Dispatcher\Attributes\Controller;
+use Carina\Http\Dispatcher\Attributes\Controller;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Controller]

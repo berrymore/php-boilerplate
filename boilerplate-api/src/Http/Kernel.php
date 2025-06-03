@@ -8,7 +8,7 @@ use App\Api\Http\Middleware\CORSMiddleware;
 use App\Api\Http\Middleware\DispatchMiddleware;
 use App\Api\Http\Middleware\MatchRouteMiddleware;
 use App\Api\Http\Middleware\ParseBodyMiddleware;
-use Component\Http\Kernel as BaseKernel;
+use Carina\Http\Kernel as BaseKernel;
 
 final class Kernel extends BaseKernel
 {
