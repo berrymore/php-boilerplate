@@ -9,6 +9,7 @@ use App\Api\Http\Hooks\ErrorHook;
 use App\Kernel\Lib\Serializer\CarbonNormalizer;
 use App\Kernel\Lib\Serializer\DecimalNormalizer;
 use App\Kernel\Lib\Serializer\UuidNormalizer;
+use Carina\Bootloader\Attribute\BeforeBoot;
 use Carina\Http\Dispatcher\ArgumentResolver;
 use Carina\Http\Dispatcher\ArgumentResolverInterface;
 use Carina\Http\Dispatcher\AttributeHandlerProvider;
@@ -16,7 +17,6 @@ use Carina\Http\Dispatcher\ControllerResolver;
 use Carina\Http\Dispatcher\ControllerResolverInterface;
 use Carina\Http\Dispatcher\ResponseFactory;
 use Carina\Http\Dispatcher\ResponseFactoryInterface;
-use Carina\Bootloader\Attribute\BeforeBoot;
 use DI\ContainerBuilder;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Config\FileLocator;
@@ -38,58 +38,38 @@ final readonly class HttpProvider
     {
         $builder->addDefinitions(
             [
-                Router::class                      => static function () {
-                    return new Router(
-                        new AttributeDirectoryLoader(
-                            new FileLocator(__DIR__ . '/../../'),
-                            new AttributeLoader()
+                Router::class                      => static fn() => new Router(
+                    new AttributeDirectoryLoader(
+                        new FileLocator(__DIR__ . '/../../'),
+                        new AttributeLoader()
+                    ),
+                    __DIR__ . '/../../',
+                ),
+                'http.serializer'                  => static fn() => new Serializer(
+                    [
+                        new BackedEnumNormalizer(),
+                        new UuidNormalizer(),
+                        new DecimalNormalizer(),
+                        new CarbonNormalizer(),
+                        new PropertyNormalizer(
+                            null,
+                            null,
+                            new PhpDocExtractor()
                         ),
-                        __DIR__ . '/../../',
-                    );
-                },
-                'http.serializer'                  => static function () {
-                    return new Serializer(
-                        [
-                            new BackedEnumNormalizer(),
-                            new UuidNormalizer(),
-                            new DecimalNormalizer(),
-                            new CarbonNormalizer(),
-                            new PropertyNormalizer(
-                                null,
-                                null,
-                                new PhpDocExtractor()
-                            ),
-                            new ArrayDenormalizer(),
-                        ],
-                        [new JsonEncoder()]
-                    );
-                },
+                        new ArrayDenormalizer(),
+                    ],
+                    [new JsonEncoder()]
+                ),
                 ControllerResolverInterface::class => autowire(ControllerResolver::class),
-                ArgumentResolverInterface::class   => static function (ContainerInterface $container) {
-                    $argumentResolver = new ArgumentResolver();
-
-                    (new AttributeHandlerProvider($container->get('http.serializer')))->provide($argumentResolver);
-
-                    //                    $argumentResolver->addAttributeHandler(
-                    //                        new AttributeHandler(
-                    //                            CurrentUser::class,
-                    //                            function (Request $request) use ($container): ?User {
-                    //                                return $container
-                    //                                    ->get(UserRepository::class)
-                    //                                    ->find($request->attributes->get('uid', 0));
-                    //                            }
-                    //                        )
-                    //                    );
-
-                    return $argumentResolver;
-                },
-                ResponseFactoryInterface::class    => static function (ContainerInterface $container) {
-                    $responseFactory = new ResponseFactory($container->get('http.serializer'));
-
-                    $responseFactory->pushHook(new ErrorHook($container->get('http.serializer')));
-
-                    return $responseFactory;
-                }
+                ArgumentResolverInterface::class   => static fn(ContainerInterface $container
+                ) => AttributeHandlerProvider::provide(
+                    new ArgumentResolver(),
+                    $container->get('http.serializer'),
+                ),
+                ResponseFactoryInterface::class    => static fn(ContainerInterface $container) => new ResponseFactory(
+                    $container->get('http.serializer')
+                )
+                    ->pushHook(new ErrorHook($container->get('http.serializer')))
             ]
         );
     }

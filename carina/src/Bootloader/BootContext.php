@@ -71,7 +71,7 @@ class BootContext
         }
     }
 
-    function extractFqcn(string $file): ?string
+    private function extractFqcn(string $file): ?string
     {
         $contents = file_get_contents($file);
         if ($contents === false) {

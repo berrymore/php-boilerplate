@@ -45,8 +45,8 @@
   },
   "scripts": {
     "cs": [
-      "phpcs --standard=PSR12 src",
-      "phpstan analyse src --level=5"
+      "phpcs --standard=PSR12 carina/src boilerplate-api/src boilerplate-kernel/src boilerplate-welcome/src",
+      "phpstan analyse --level=5 carina/src boilerplate-api/src boilerplate-kernel/src boilerplate-welcome/src"
     ]
   }
 }

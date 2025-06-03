@@ -22,23 +22,18 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final readonly class AttributeHandlerProvider
 {
-    public function __construct(private DenormalizerInterface $denormalizer)
-    {
-    }
-
-    /**
-     * @param  \Carina\Http\Dispatcher\ArgumentResolver  $argumentResolver
-     */
-    public function provide(ArgumentResolver $argumentResolver): void
-    {
+    public static function provide(
+        ArgumentResolver $argumentResolver,
+        DenormalizerInterface $denormalizer
+    ): ArgumentResolver {
         $handlers = [
             new AttributeHandler(
                 RequestBody::class,
-                function (Request $request, ReflectionParameter $parameter) {
+                function (Request $request, ReflectionParameter $parameter) use ($denormalizer) {
                     $type = $parameter->getType();
 
                     if ($type instanceof ReflectionNamedType && ! $type->isBuiltin()) {
-                        return $this->denormalizer->denormalize($request->request->all(), $type->getName());
+                        return $denormalizer->denormalize($request->request->all(), $type->getName());
                     }
 
                     throw new InvalidArgumentException('RequestBody can only be used with typed parameters');
@@ -118,5 +113,7 @@ final readonly class AttributeHandlerProvider
         foreach ($handlers as $handler) {
             $argumentResolver->addAttributeHandler($handler);
         }
+
+        return $argumentResolver;
     }
 }

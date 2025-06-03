@@ -23,10 +23,14 @@ class ResponseFactory implements ResponseFactoryInterface
 
     /**
      * @param  callable  $hook
+     *
+     * @return \Carina\Http\Dispatcher\ResponseFactory
      */
-    public function pushHook(callable $hook): void
+    public function pushHook(callable $hook): ResponseFactory
     {
         $this->hooks[] = $hook;
+
+        return $this;
     }
 
     /**
